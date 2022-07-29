@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 from socialmedia.models import User, PostWall
 from config.serializers import PostSerializer, UserSerializer
@@ -18,29 +17,29 @@ class UserViews():
     def get_users_info(request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
-        return JsonResponse({ "users": serializer.data })
+        return JsonResponse({"users": serializer.data})
 
     @api_view(['GET'])
     def get_user_info(request, id):
         try:
-            user = User.objects.get(pk = id)
+            user = User.objects.get(pk=id)
         except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)   
-        
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         serializer = UserSerializer(user)
         return Response(serializer.data)
-    
+
     @api_view(['POST'])
     def create_user(request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     @api_view(['PUT'])
     def edit_user(request, id):
         try:
-            user = User.objects.get(pk = id)
+            user = User.objects.get(pk=id)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = UserSerializer(user, data=request.data)
@@ -52,12 +51,12 @@ class UserViews():
     @api_view(['DELETE'])
     def destroy_user(request, id):
         try:
-            user = User.objects.get(pk = id)
+            user = User.objects.get(pk=id)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
+
 
 class WallRequests():
 
@@ -70,9 +69,9 @@ class WallRequests():
     @api_view(['GET'])
     def wall_post_details(request, id):
         try:
-            wall_post = PostWall.objects.get(pk = id)
+            wall_post = PostWall.objects.get(pk=id)
         except PostWall.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)   
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = PostSerializer(wall_post)
         return Response(serializer.data)
 
